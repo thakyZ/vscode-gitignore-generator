@@ -1,23 +1,22 @@
 import * as http from "https";
-import { parse as parseUrl } from "url";
+import { URL } from "url";
 
-export function httpGet(url: string) {
-    const { protocol, hostname, path } = parseUrl(url);
+export function httpGet(url: string): Promise<string> {
+    const urlObj: URL = new URL(url);
+    const { protocol, hostname, pathname } = urlObj;
 
     return new Promise((resolve, reject) => {
-        let data = "";
+        let data: string = "";
 
-        http
-            .get({ protocol, hostname, path }, res => {
-                res.on("data", chunk => (data += chunk));
-                res.on("end", () => resolve(data));
-                res.on("close", () => reject());
-            })
-            .on("error", () => reject());
+        http.get({ protocol, hostname, pathname }, res => {
+            res.on("data", chunk => (data += chunk));
+            res.on("end", () => resolve(data));
+            res.on("close", () => reject());
+        }).on("error", (err) => reject(err));
     });
 }
 
-export async function getData(url: string) {
+export async function getData(url: string): Promise<string | null> {
     try {
         return Promise.resolve(await httpGet(url));
     } catch (e) {

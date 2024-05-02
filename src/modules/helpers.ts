@@ -3,7 +3,12 @@ import { readFile } from "./filesystem";
 import { getData } from "./http";
 import { API_URL, ALTERNATIVE_API_URL, BANNER, USER_RULES } from "./config";
 
-export function hitAntiDdos(value: string | null) {
+export interface IListChoice {
+  label: string;
+  picked: boolean;
+}
+
+export function hitAntiDdos(value: string | null): boolean {
     if(value === null) {
         return false;
     }
@@ -11,7 +16,7 @@ export function hitAntiDdos(value: string | null) {
     return (/^<!DOCTYPE.*>/gi).test(value.trim());
 }
 
-export async function getList(path: string | null, keepCurrent: boolean) {
+export async function getList(path: string | null, keepCurrent: boolean): Promise<IListChoice[] | null> {
     let data = await getData(`${API_URL}/list`);
 
     if(hitAntiDdos(data)) {
@@ -44,8 +49,8 @@ export async function getList(path: string | null, keepCurrent: boolean) {
     return items;
 }
 
-export function getOs() {
-    const systems = {
+export function getOs(): string | null {
+    const systems: {[key: string]: string} = {
         darwin: "macos",
         linux: "linux",
         win32: "windows",
@@ -56,7 +61,7 @@ export function getOs() {
     return system ? system : null;
 }
 
-export function getCurrentItems(path: string) {
+export function getCurrentItems(path: string): string[] {
     const file = readFile(path);
 
     if (file === null) {
@@ -69,7 +74,7 @@ export function getCurrentItems(path: string) {
     return result && result[1] ? result[1].split(",") : [];
 }
 
-export function getUserRules(filePath) {
+export function getUserRules(filePath: string): string | null {
     const file = readFile(filePath);
 
     if (file === null) {
@@ -83,10 +88,7 @@ export function getUserRules(filePath) {
     return result ? result.trim() : null;
 }
 
-export function getSelectedItems(
-    filePath: string | null,
-    keepCurrent: boolean
-) {
+export function getSelectedItems(filePath: string | null, keepCurrent: boolean): (string | null)[] {
     const selected = [];
 
     if (!keepCurrent) {
@@ -100,7 +102,7 @@ export function getSelectedItems(
     return selected.filter(item => !!item);
 }
 
-export function generateFile(path: string, output: string, override: boolean) {
+export function generateFile(path: string, output: string, override: boolean): string {
     output = `# ${BANNER}\n${output}\n# ${USER_RULES}\n`;
 
     if (!override) {

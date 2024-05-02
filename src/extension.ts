@@ -1,10 +1,10 @@
 "use strict";
 
-import * as vscode from "vscode";
+import { ExtensionContext, commands, Disposable } from "vscode";
 import Generator from "./Generator";
 
-export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand(
+export function activate(context: ExtensionContext) {
+    const disposable: Disposable = commands.registerCommand(
         "extension.gitignoreGenerate",
         () => {
             try {
@@ -12,7 +12,11 @@ export function activate(context: vscode.ExtensionContext) {
 
                 generator.init();
             } catch (e) {
-                console.log(e.message);
+                if (e instanceof Error) {
+                    console.error(e.message);
+                } else  {
+                    console.error(e);
+                }
             }
         }
     );

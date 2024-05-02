@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
+import { WorkspaceFolder } from "vscode";
 
 export function readFile(path: string) {
     try {
@@ -21,6 +22,6 @@ export function fileExists(path: string) {
     return existsSync(path);
 }
 
-export function hasFolder(folders) {
+export function hasFolder(folders: readonly WorkspaceFolder[] | undefined) {
     return folders && folders.length > 0 ? true : false;
 }
