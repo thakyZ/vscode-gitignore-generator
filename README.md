@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-    <img src="https://vsmarketplacebadge.apphb.com/version/piotrpalarz.vscode-gitignore-generator.svg?label=Version" alt=".gitignore Generator version">
-    <img src="https://vsmarketplacebadge.apphb.com/installs/piotrpalarz.vscode-gitignore-generator.svg?label=Installs" alt=".gitignore Generator installs">
-    <img src="https://vsmarketplacebadge.apphb.com/rating-short/piotrpalarz.vscode-gitignore-generator.svg?label=Rating" alt=".gitignore Generator rating">
+    <img src="https://vsmarketplacebadge.apphb.com/version/piotrpalarz.vscode-gitignore-generator.png?label=Version" alt=".gitignore Generator version">
+    <img src="https://vsmarketplacebadge.apphb.com/installs/piotrpalarz.vscode-gitignore-generator.png?label=Installs" alt=".gitignore Generator installs">
+    <img src="https://vsmarketplacebadge.apphb.com/rating-short/piotrpalarz.vscode-gitignore-generator.png?label=Rating" alt=".gitignore Generator rating">
 </p>
 
 ---
