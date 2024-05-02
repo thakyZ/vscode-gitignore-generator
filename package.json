@@ -3,11 +3,12 @@
     "displayName": ".gitignore Generator",
     "description": "Generate .gitignore file using gitignore.io API",
     "version": "1.0.3",
-    "publisher": "piotrpalarz",
+    "publisher": "nekoboinick",
     "license": "SEE LICENSE IN LICENSE",
     "engines": {
         "vscode": "^1.88.0"
     },
+    "type": "module",
     "categories": [
         "SCM Providers"
     ],
@@ -46,7 +47,8 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "test": "npm run compile && node ./out/test/index.js"
+        "test": "npm run compile && node ./out/test/index.js",
+        "lint": "eslint -c eslint.config.js ."
     },
     "devDependencies": {
         "@eslint/js": "^9.1.1",
@@ -56,7 +58,9 @@
         "@typescript-eslint/eslint-plugin": "^7.8.0",
         "@typescript-eslint/parser": "^7.8.0",
         "@vscode/test-electron": "^2.3.9",
-        "eslint": "^8.57.0",
-        "typescript": "^5.4.5"
+        "eslint": "^9.1.1",
+        "glob": "^10.3.12",
+        "typescript": "^5.4.5",
+        "typescript-eslint": "^7.8.0"
     }
 }
