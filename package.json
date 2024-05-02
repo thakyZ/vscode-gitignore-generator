@@ -50,10 +50,14 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
+        "@eslint/js": "^9.1.1",
         "@types/mocha": "^10.0.6",
         "@types/node": "^20.12.8",
-        "tslint": "^5.20.1",
-        "typescript": "^5.4.5",
-        "vscode": "^1.1.6"
+        "@types/vscode": "^1.88.0",
+        "@typescript-eslint/eslint-plugin": "^7.8.0",
+        "@typescript-eslint/parser": "^7.8.0",
+        "@vscode/test-electron": "^2.3.9",
+        "eslint": "^8.57.0",
+        "typescript": "^5.4.5"
     }
 }
