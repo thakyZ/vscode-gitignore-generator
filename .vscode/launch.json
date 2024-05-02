@@ -11,7 +11,10 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--disable-extensions",
+                "-n",
+                "${workspaceFolder}/src/test-fixtures/fixture1"
             ],
             "outFiles": [
                 "${workspaceFolder}/out/**/*.js"
@@ -24,8 +27,11 @@
             "request": "launch",
             "runtimeExecutable": "${execPath}",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "--extensionTestsPath=${workspaceFolder}/out/test"
+                "--extensionDevelopmentPath=${workspaceFolder}/src/test-fixtures/fixture1",
+                "--disable-extensions",
+                "--extensionTestsPath=${workspaceFolder}/out/test/runTest.js",
+                "-n",
+                "${workspaceFolder}/src/test-fixtures/fixture1"
             ],
             "outFiles": [
                 "${workspaceFolder}/out/test/**/*.js"

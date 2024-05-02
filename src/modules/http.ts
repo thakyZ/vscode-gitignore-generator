@@ -3,12 +3,11 @@ import { URL } from "url";
 
 export function httpGet(url: string): Promise<string> {
     const urlObj: URL = new URL(url);
-    const { protocol, hostname, pathname } = urlObj;
 
     return new Promise((resolve, reject) => {
         let data: string = "";
 
-        http.get({ protocol, hostname, pathname }, res => {
+        http.get(urlObj, res => {
             res.on("data", chunk => (data += chunk));
             res.on("end", () => resolve(data));
             res.on("close", () => reject());

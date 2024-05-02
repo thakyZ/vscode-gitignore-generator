@@ -18,15 +18,19 @@ export default class Generator {
     private override: boolean = true;
     private selected: string[] = [];
 
-    public async init(): Promise<void> {
-        this.filePath = await this.getFilePath();
+    public async init(...args: string[]): Promise<string | undefined> {
+        if (args.length === 0) {
+            this.filePath = await this.getFilePath();
 
-        if (this.filePath) {
-            this.override = await this.getOverrideOption();
+            if (this.filePath) {
+                this.override = await this.getOverrideOption();
+            }
+
+            this.selected = await this.getSelectedOptions();
+        } else {
+            this.selected = args;
         }
-
-        this.selected = await this.getSelectedOptions();
-        this.generate();
+        return this.generate();
     }
 
     private async get1<T, K>(fn: (arg: T) => PromiseLike<K>, ...args: [arg: T]): Promise<K> {

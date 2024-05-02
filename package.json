@@ -8,7 +8,6 @@
     "engines": {
         "vscode": "^1.88.0"
     },
-    "type": "module",
     "categories": [
         "SCM Providers"
     ],
@@ -47,7 +46,7 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "test": "npm run compile && node ./out/test/index.js",
+        "test": "npm run compile && node ./out/test/runTest.js",
         "lint": "eslint -c eslint.config.js ."
     },
     "devDependencies": {
@@ -60,6 +59,7 @@
         "@vscode/test-electron": "^2.3.9",
         "eslint": "^9.1.1",
         "glob": "^10.3.12",
+        "mocha": "^10.4.0",
         "typescript": "^5.4.5",
         "typescript-eslint": "^7.8.0"
     }

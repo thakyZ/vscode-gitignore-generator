@@ -11,85 +11,49 @@
 // a possible error to the callback or null if none.
 
 import * as path from 'node:path';
-import * as cp from 'node:child_process';
-import { runTests, downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath } from '@vscode/test-electron';
+import * as fs from 'node:fs';
+import * as child_process from 'node:child_process';
+import { downloadAndUnzipVSCode, resolveCliArgsFromVSCodeExecutablePath, runTests } from '@vscode/test-electron';
 
 // You can directly control Mocha options by uncommenting the following lines
 // See https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically#set-options for more info
 
+async function getExtensionInstaller(): Promise<string | undefined> {
+	const extension = path.resolve(__dirname, '../../');
+	const dirElements: string[] = await fs.promises.readdir(extension);
+	for (const element of dirElements) {
+		if (fs.existsSync(element)) {
+			const filePath: string = path.join(extension, element);
+			const stat: fs.Stats = await fs.promises.stat(filePath);
+			if (stat.isFile() && path.extname(filePath) === '.vsix') {
+				return filePath;
+			}
+		}
+	}
+	return undefined;
+}
+
 async function go() {
     try {
-      const extensionDevelopmentPath = path.resolve(__dirname, '../../../');
+			const extensionDevelopmentPath = path.resolve(__dirname, '../../');
 			const extensionTestsPath = path.resolve(__dirname, './suite');
+			const testWorkspace = path.resolve(__dirname, '../../src/test-fixtures/fixture1/');
 
-			/**
-			 * Basic usage
-			 */
-					await runTests({
-				extensionDevelopmentPath,
-				extensionTestsPath,
-			});
+			const extension: string | undefined = await getExtensionInstaller();
+			if (typeof extension === 'undefined') {
+				throw new Error('Failed to find packaged extension.');
+			}
 
-			const testWorkspace = path.resolve(__dirname, '../../../test-fixtures/fixture1');
-
-			/**
-			 * Running another test suite on a specific workspace
-			 */
-			await runTests({
-				extensionDevelopmentPath,
-				extensionTestsPath: extensionTestsPath,
-				launchArgs: [testWorkspace],
-			});
-
-			/**
-			 * Use 1.36.1 release for testing
-			 */
-			await runTests({
-				version: '1.36.1',
-				extensionDevelopmentPath,
-				extensionTestsPath,
-				launchArgs: [testWorkspace],
-			});
-
-			/**
-			 * Use Insiders release for testing
-			 */
-			await runTests({
-				version: 'insiders',
-				extensionDevelopmentPath,
-				extensionTestsPath,
-				launchArgs: [testWorkspace],
-			});
-
-			/**
-			 * Noop, since 1.36.1 already downloaded to .vscode-test/vscode-1.36.1
-			 */
-			await downloadAndUnzipVSCode('1.36.1');
-
-			/**
-			 * Manually download VS Code 1.35.0 release for testing.
-			 */
-			const vscodeExecutablePath = await downloadAndUnzipVSCode('1.35.0');
-			await runTests({
-				vscodeExecutablePath,
-				extensionDevelopmentPath,
-				extensionTestsPath,
-				launchArgs: [testWorkspace],
-			});
-
-			/**
-			 * Install Python extension
-			 */
+			const vscodeExecutablePath = await downloadAndUnzipVSCode('1.88.0');
 			const [cli, ...args] = resolveCliArgsFromVSCodeExecutablePath(vscodeExecutablePath);
-			cp.spawnSync(cli, [...args, '--install-extension', 'ms-python.python'], {
+			child_process.spawnSync(cli, [...args, '--install-extension', extension], {
 				encoding: 'utf-8',
-				stdio: 'inherit',
+				stdio: 'inherit'
 			});
-
-			/**
-			 * - Add additional launch flags for VS Code
-			 * - Pass custom environment variables to test runner
-			 */
+			child_process.spawnSync(cli, ['-n', testWorkspace, ...args], {
+				encoding: 'utf-8',
+				stdio: 'inherit'
+			});
 			await runTests({
 				vscodeExecutablePath,
 				extensionDevelopmentPath,
@@ -98,22 +62,8 @@ async function go() {
 					testWorkspace,
 					// This disables all extensions except the one being tested
 					'--disable-extensions',
-				],
-				// Custom environment variables for extension test script
-				extensionTestsEnv: { foo: 'bar' },
-			});
-
-			/**
-			 * Use win64 instead of win32 for testing Windows
-			 */
-			if (process.platform === 'win32') {
-				await runTests({
-					extensionDevelopmentPath,
-					extensionTestsPath,
-					version: '1.40.0',
-					platform: 'win32-x64-archive',
-				});
-			}
+				]
+		});
     } catch (err) {
 			console.error('Failed to run tests');
 			console.error(err);
